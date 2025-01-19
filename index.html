@@ -1,126 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="An interactive game to learn about authentication and security concepts">
-    <meta name="theme-color" content="#1E40AF">
-    <meta property="og:title" content="Security Masters">
-    <meta property="og:description" content="Learn about authentication and security through an interactive game">
-    <meta property="og:type" content="website">
-
-    <title>Security Masters</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body class="bg-gray-100 min-h-screen">
-    <noscript>
-        <div class="fixed inset-0 bg-red-900 z-50 flex items-center justify-center text-white p-4 text-center">
-            This game requires JavaScript to run. Please enable JavaScript and reload the page.
-        </div>
-    </noscript>
-    <div id="server-warning" class="hidden">
-        <div class="fixed inset-0 bg-red-900 z-50 flex items-center justify-center text-white p-4 text-center">
-            This game must be run from a web server due to ES6 modules. Please use a local server (e.g., python -m http.server).
-        </div>
-    </div>
-
-    <!-- Loading Screen -->
-    <div id="loading-screen" class="fixed inset-0 bg-blue-900 z-50 flex items-center justify-center">
-        <div class="text-center">
-            <h1 class="text-4xl font-bold text-white mb-8">Security Masters</h1>
-            <div class="relative w-64 h-4 bg-blue-700 rounded-full overflow-hidden">
-                <div id="loading-bar" class="absolute top-0 left-0 h-full w-0 bg-blue-400 transition-all duration-300"></div>
-            </div>
-            <p id="loading-text" class="text-blue-200 mt-4">Loading game assets...</p>
-            <p id="loading-error" class="text-red-300 mt-4 hidden">
-                Error loading game assets. Please refresh the page.
-            </p>
-        </div>
-    </div>
-
-    <!-- Game Container -->
-    <div id="game-container" class="max-w-4xl mx-auto p-4 invisible">
-        <!-- Header -->
-        <header class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <h1 class="text-2xl font-bold text-gray-800">Security Masters</h1>
-                    <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                        Chapter <span id="current-chapter">1</span>/7
-                    </span>
-                </div>
-                <div id="player-progress" class="text-gray-600">
-                    <div class="flex items-center space-x-2">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                  d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
-                        </svg>
-                        <span id="achievement-count">0/10</span>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Security Masterse</title>
+        <meta name="description" content="An interactive cybersecurity education game">
+        <link rel="stylesheet" href="./css/styles.css">
+    </head>
+    <body>
+        <!-- Game Container -->
+        <div class="game-container terminal-theme">
+            <!-- Header with Game Status -->
+            <header class="game-header">
+                <div class="terminal-bar">
+                    <span class="terminal-title">Security Masters v1.0</span>
+                    <div class="terminal-controls">
+                        <span class="minimize">_</span>
+                        <span class="maximize">□</span>
+                        <span class="close">×</span>
                     </div>
                 </div>
-            </div>
-        </header>
+                <nav class="game-nav">
+                    <div class="progress-indicator">
+                        <span class="chapter-label">Current Mission:</span>
+                        <span class="chapter-name">Welcome to TechStart</span>
+                    </div>
+                    <div class="status-bar">
+                        <span class="security-level">Security Level: Trainee</span>
+                        <span class="mission-progress">Progress: 0/7</span>
+                    </div>
+                </nav>
+            </header>
 
-        <!-- Main Game Area -->
-        <main class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <!-- Story Section -->
-            <div id="story-container" class="mb-6 min-h-[200px]">
-                <!-- Story content will be injected here -->
-            </div>
-            
-            <!-- Interactive Elements -->
-            <div id="interaction-container" class="mb-6">
-                <!-- Interactive elements will be injected here -->
-            </div>
+            <!-- Main Game Area -->
+            <main class="game-main">
+                <!-- Story/Scenario Display -->
+                <section class="scenario-display" aria-live="polite">
+                    <div class="scenario-content">
+                        <!-- Current scenario text will be displayed here -->
+                    </div>
+                </section>
 
-            <!-- Choices Section -->
-            <div id="choices-container" class="space-y-4">
-                <!-- Choice buttons will be injected here -->
-            </div>
-        </main>
+                <!-- Interactive Area -->
+                <section class="interactive-area">
+                    <!-- Multiple Choice Interface -->
+                    <div class="choice-interface">
+                        <h2 class="choice-prompt">What would you like to do?</h2>
+                        <div class="choices-container">
+                            <!-- Choices will be dynamically inserted here -->
+                        </div>
+                    </div>
 
-        <!-- Navigation -->
-        <div class="flex justify-between mt-6">
-            <button id="prev-btn" 
-                    class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled>
-                Previous
-            </button>
-            <button id="next-btn" 
-                    class="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
-                Continue Story
-            </button>
+                    <!-- Challenge Area -->
+                    <div class="challenge-area">
+                        <!-- Interactive challenges will appear here -->
+                        <div class="challenge-content">
+                            <!-- Example: Password Policy Builder -->
+                            <div class="policy-builder" hidden>
+                                <h3>Configure Password Policy</h3>
+                                <div class="policy-options">
+                                    <!-- Policy options will be inserted here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Feedback Area -->
+                <section class="feedback-area" aria-live="polite">
+                    <div class="feedback-message">
+                        <!-- Feedback on choices will appear here -->
+                    </div>
+                </section>
+            </main>
+
+            <!-- Game Controls and Status -->
+            <footer class="game-footer">
+                <div class="tools-panel">
+                    <button class="hint-btn" aria-label="Get a hint">
+                        Get Hint
+                    </button>
+                    <button class="help-btn" aria-label="View Help">
+                        Help Manual
+                    </button>
+                    <button class="save-btn" aria-label="Save Progress">
+                        Save Progress
+                    </button>
+                </div>
+
+                <!-- Achievement Notifications -->
+                <div class="achievement-area" aria-live="polite">
+                    <!-- Achievements will appear here -->
+                </div>
+            </footer>
         </div>
 
-        <!-- Achievement Notification -->
-        <div id="achievement-popup" 
-             class="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-lg shadow-lg transform translate-y-full transition-transform duration-300 hidden">
-            <div class="flex items-center space-x-3">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span id="achievement-text">Achievement Unlocked!</span>
+        <!-- Modal Templates -->
+        <div class="modal-templates" hidden>
+            <!-- Help Modal -->
+            <dialog class="help-modal">
+                <header class="modal-header">
+                    <h2>Security Manual</h2>
+                    <button class="close-modal" aria-label="Close help manual">×</button>
+                </header>
+                <div class="modal-content">
+                    <!-- Help content will be loaded here -->
+                </div>
+            </dialog>
+
+            <!-- Hint Modal -->
+            <dialog class="hint-modal">
+                <header class="modal-header">
+                    <h2>Security Hint</h2>
+                    <button class="close-modal" aria-label="Close hint">×</button>
+                </header>
+                <div class="modal-content">
+                    <!-- Hint content will be loaded here -->
+                </div>
+            </dialog>
+        </div>
+
+        <!-- Loading Screen -->
+        <div class="loading-screen" hidden>
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Initializing Security Systems...</p>
             </div>
         </div>
-    </div>
 
-    <!-- Scripts -->
-    <script type="module" src="js/game.js"></script>
-
-    <script>
-        // Check if running from file://
-        if (window.location.protocol === 'file:') {
-            document.getElementById('server-warning').classList.remove('hidden');
-        }
-        
-        // Handle script loading errors
-        window.addEventListener('error', function(e) {
-            if (e.filename.endsWith('.js')) {
-                document.getElementById('loading-error').classList.remove('hidden');
-            }
-        });
-    </script>
-</body>
+        <!-- Scripts -->
+        <script type="module" src="js/story-engine.js"></script>
+        <script type="module" src="js/main.js"></script>
+    </body>
 </html>

@@ -1,102 +1,361 @@
-/* Custom animations */
-@keyframes slideIn {
-    from {
-        transform: translateX(-100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+/* Base Theme Variables */
+:root {
+    /* Core Colors - Modifying the classic hacker theme for optimal contrast */
+    --bg-primary: #0a0a0a;
+    --bg-secondary: #1a1a1a;
+    --text-primary: #33ff33;  /* Bright green for main text */
+    --text-secondary: #00cc00; /* Slightly darker green for secondary text */
+    --text-dim: #006600;      /* Dimmed text */
+    --accent-success: #00ff00;
+    --accent-warning: #ffcc00;
+    --accent-danger: #ff3333;
+    
+    /* Spacing */
+    --space-xs: 0.25rem;
+    --space-sm: 0.5rem;
+    --space-md: 1rem;
+    --space-lg: 1.5rem;
+    --space-xl: 2rem;
+
+    /* Font Settings */
+    --font-main: 'Consolas', 'Monaco', monospace;
+    --font-size-small: 0.875rem;
+    --font-size-normal: 1rem;
+    --font-size-large: 1.25rem;
+    --font-size-xl: 1.5rem;
+
+    /* Effects */
+    --glow-effect: 0 0 10px var(--text-primary);
+    --terminal-shadow: 0 0 20px rgba(51, 255, 51, 0.15);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-@keyframes popIn {
-    0% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* Story text animation */
-.story-text-enter {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* Achievement popup animation */
-.achievement-show {
-    animation: popIn 0.3s ease-out forwards;
-}
-
-/* Choice button hover effect */
-.choice-button {
-    transition: transform 0.2s;
-}
-
-.choice-button:hover {
-    transform: translateY(-2px);
-}
-
-/* Custom scrollbar */
-.custom-scrollbar {
-    scrollbar-width: thin;
-    scrollbar-color: #CBD5E0 #EDF2F7;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: #EDF2F7;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: #CBD5E0;
-    border-radius: 4px;
-}
-
-/* Typing effect for dialog */
-.typing-effect {
-    overflow: hidden;
-    border-right: 2px solid #4B5563;
-    white-space: nowrap;
+/* Reset and Base Styles */
+* {
     margin: 0;
-    animation: typing 3.5s steps(40, end),
-               blink-caret 0.75s step-end infinite;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-main);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Container Styles */
+.game-container {
+    width: 80%;
+    margin: 2rem auto;
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--text-secondary);
+    border-radius: 8px;
+    box-shadow: var(--terminal-shadow);
+    overflow: hidden;
+}
+
+/* Terminal Header */
+.terminal-bar {
+    background-color: var(--bg-secondary);
+    padding: var(--space-sm) var(--space-md);
+    border-bottom: 1px solid var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.terminal-title {
+    color: var(--text-secondary);
+    font-size: var(--font-size-normal);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Terminal Controls */
+.terminal-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.terminal-controls span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 1px solid var(--text-dim);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.terminal-controls span:hover{
+    box-shadow: var(--glow-effect);
+    background-color: var(--text-dim);
+}
+
+.terminal-controls .minimize {
+    border-color: var(--accent-warning);
+    color: var(--accent-warning);
+    padding-bottom: 10px;
+}
+
+.terminal-controls .maximize {
+    border-color: var(--text-secondary);
+    color: var(--text-secondary);
+    padding: 0 1px 1px 0.5px;
+}
+
+.terminal-controls .close {
+    border-color: var(--accent-danger);
+    color: var(--accent-danger);
+    padding: 0 1px 1px 0;
+}
+
+/* Navigation and Status */
+.game-nav {
+    background-color: var(--bg-secondary);
+    padding: var(--space-sm) var(--space-md);
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--text-dim);
+}
+
+.progress-indicator {
+    font-size: var(--font-size-normal);
+}
+
+.status-bar {
+    font-size: var(--font-size-normal);
+    color: var(--text-secondary);
+    font-family: var(--font-main);
+}
+
+/* Main Game Area */
+.game-main {
+    padding: var(--space-lg);
+    background-color: var(--bg-primary);
+}
+
+/* Scenario Display */
+.scenario-display {
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    border: 1px solid var(--text-dim);
+    border-radius: 4px;
+    background-color: var(--bg-secondary);
+}
+
+.scenario-content {
+    font-size: var(--font-size-normal);
+    line-height: 1.6;
+    text-align: left;
+    padding: var(--space-md);
+    position: relative;
+}
+
+.typed-line {
+    margin-bottom: 0.5rem;
+    display: block;
+    min-height: 1.6em;
+}
+
+/* Choice Interface */
+.choice-interface {
+    margin-bottom: var(--space-lg);
+}
+
+.choice-prompt {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-size-large);
+}
+
+.choices-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.choice-btn {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--text-dim);
+    color: var(--text-primary);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    transition: all 0.3s ease;
+    font-family: var(--font-main);
+    font-size: var(--font-size-normal);
+    text-align: left;
+    width: 100%;
+}
+
+.choice-btn:hover {
+    background-color: var(--text-dim);
+    border-color: var(--text-primary);
+    box-shadow: var(--glow-effect);
+}
+
+.choice-number {
+    background-color: var(--bg-primary);
+    border-radius: 50%;
+    min-width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-normal);
+    font-family: var(--font-main);
+}
+
+.choice-text {
+    flex: 1;
+}
+
+/* Feedback Area */
+.feedback-area {
+    padding: var(--space-md);
+    margin-top: var(--space-lg);
+    border-left: 3px solid var(--text-secondary);
+    background-color: var(--bg-secondary);
+}
+
+/* Footer Controls */
+.game-footer {
+    padding: var(--space-md);
+    border-top: 1px solid var(--text-dim);
+    background-color: var(--bg-secondary);
+}
+
+.tools-panel {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.tools-panel button {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--text-dim);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: var(--font-main);
+    font-size: var(--font-size-normal);
+    min-width: 120px;
+    text-align: center;
+}
+
+.tools-panel button:hover {
+    border-color: var(--text-primary);
+    box-shadow: var(--glow-effect);
+    background-color: var(--text-dim);
+}
+
+/* Modal Styles */
+.modal-templates dialog {
+    background-color: var(--bg-secondary);
+    border: 2px solid var(--text-secondary);
+    border-radius: 8px;
+    padding: 0;
+    max-width: 500px;
+    width: 90%;
+}
+
+.modal-header {
+    background-color: var(--bg-primary);
+    padding: var(--space-md);
+    border-bottom: 1px solid var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-content {
+    padding: var(--space-lg);
+}
+
+/* Loading Screen */
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-screen[hidden] {
+    display: none;
+}
+
+.loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+}
+
+.loading-spinner {
+    border: 4px solid var(--text-dim);
+    border-top: 4px solid var(--text-primary);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    color: var(--text-primary);
+    font-size: var(--font-size-large);
+    text-align: center;
+}
+
+/* Typing Animation */
 @keyframes typing {
     from { width: 0 }
     to { width: 100% }
 }
 
-@keyframes blink-caret {
-    from, to { border-color: transparent }
-    50% { border-color: #4B5563 }
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
-/* Password strength indicator */
-.strength-meter {
-    height: 4px;
-    border-radius: 2px;
-    transition: width 0.3s ease-out;
+/* Accessibility Enhancements */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
 }
 
-/* Interactive element highlights */
-.interactive-highlight {
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
-    transition: box-shadow 0.3s ease-out;
+/* Focus States */
+:focus {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
 }
 
-.interactive-highlight:hover {
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.5);
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    :root {
+        --text-primary: #ffffff;
+        --text-secondary: #cccccc;
+        --text-dim: #999999;
+    }
 }
