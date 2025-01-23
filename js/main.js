@@ -22,9 +22,6 @@ class Game {
             // Initialize story engine
             this.storyEngine = new StoryEngine();
             
-            // Set up UI event listeners
-            this.setupEventListeners();
-            
             // Initialize story engine
             await this.storyEngine.init();
 
@@ -41,50 +38,6 @@ class Game {
             console.error('Game initialization failed:', error);
             this.handleError(error);
         }
-    }
-
-    setupEventListeners() {
-        // Save button
-        this.toolButtons.save.addEventListener('click', () => {
-            try {
-                this.storyEngine.saveProgress();
-                this.showNotification('Game progress saved!');
-            } catch (error) {
-                this.showNotification('Failed to save game progress', 'error');
-            }
-        });
-
-        // Help button
-        this.toolButtons.help.addEventListener('click', () => {
-            const helpModal = document.querySelector('.help-modal');
-            helpModal.showModal();
-        });
-
-        // Hint button
-        this.toolButtons.hint.addEventListener('click', () => {
-            const hintModal = document.querySelector('.hint-modal');
-            if (this.storyEngine.currentScene?.hint) {
-                document.querySelector('.hint-modal .modal-content').textContent = 
-                    this.storyEngine.currentScene.hint;
-                hintModal.showModal();
-            } else {
-                this.showNotification('No hint available for this scene');
-            }
-        });
-
-        // Close buttons for modals
-        document.querySelectorAll('.close-modal').forEach(button => {
-            button.addEventListener('click', () => {
-                button.closest('dialog').close();
-            });
-        });
-
-        // Handle keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                document.querySelectorAll('dialog[open]').forEach(dialog => dialog.close());
-            }
-        });
     }
 
     checkSavedProgress() {

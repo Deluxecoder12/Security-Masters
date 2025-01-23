@@ -226,6 +226,8 @@ body {
     margin-top: var(--space-lg);
     border-left: 3px solid var(--text-secondary);
     background-color: var(--bg-secondary);
+    font-size: var(--font-size-normal);
+    font-family: var(--font-main);
 }
 
 /* Footer Controls */
@@ -322,6 +324,79 @@ body {
     color: var(--text-primary);
     font-size: var(--font-size-large);
     text-align: center;
+}
+
+/* Score Modal */
+.score-display {
+    text-align: center;
+    padding: var(--space-lg);
+}
+
+.score-display h2 {
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+}
+
+.score-value {
+    font-size: var(--font-size-xl);
+    margin: var(--space-lg) 0;
+}
+
+.score-icon {
+    font-size: 48px;
+    margin: var(--space-lg) 0;
+}
+
+.choices-made {
+    margin: var(--space-xl) 0;
+    text-align: left;
+}
+
+.choices-made ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.choices-made li {
+    margin: var(--space-sm) 0;
+    padding: var(--space-md);
+    background: var(--bg-secondary);
+    border-radius: 4px;
+}.score-display {
+    text-align: center;
+    padding: var(--space-lg);
+}
+
+.score-value {
+    font-size: var(--font-size-xl);
+    margin: var(--space-md) 0;
+}
+
+.score-icon {
+    font-size: 48px;
+    margin: var(--space-md) 0;
+}
+
+.choices-made {
+    margin: var(--space-lg) 0;
+    text-align: left;
+}
+
+.continue-btn {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--text-dim);
+    padding: var(--space-md) var(--space-lg);
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    font-size: var(--font-size-normal);
+    margin-top: var(--space-lg);
+}
+
+.continue-btn:hover {
+    border-color: var(--text-primary);
+    box-shadow: var(--glow-effect);
 }
 
 /* Typing Animation */

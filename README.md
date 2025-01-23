@@ -4,7 +4,7 @@ An interactive web-based game to overview Passwords, MFA, SSO, and Passkeys. con
 
 ## Overview
 
-Security Masters puts middle school students in the role of an IT Security Administrator at TechStart, a growing technology company. Through an engaging narrative-driven experience, players evolve their company's authentication systems from basic passwords to modern passkeys while learning about security challenges and solutions.
+Security Masters puts you in the role of an IT Security Administrator at TechStart, a growing technology company. Through an engaging narrative-driven experience, players evolve their company's authentication systems from basic passwords to modern passkeys while learning about security challenges and solutions.
 
 ## Educational Objectives
 

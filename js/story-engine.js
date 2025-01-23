@@ -1,38 +1,75 @@
 import { chapter1 } from './chapters/chapter1.js';
+import { chapter2 } from './chapters/chapter2.js';
 
 class StoryEngine {
     constructor() {
-        // Initialize game state
-        this.currentChapter = null;
-        this.currentScene = null;
-        this.gameState = {
-            policyChoices: {},
-            suboptimalChoices: false,
-            score: 0
+        // Available chapters
+        this.chapters = {
+            chapter1,
+            chapter2
         };
+
+        // Initialize game state
+        this.currentChapter = this.chapters.chapter1; // Set initial chapter
+        
+        this.currentScene = this.currentChapter.initialScenario;
+        
+        this.gameState = {
+            score: 0,
+            currentChapterId: 'chapter1'
+        };
+
+        this.currentSceneNumber = 1;
+
+        this.totalScenes = this.currentChapter.totalScenes;
+
+        this.securityLevels = [
+            'Trainee',
+            'Junior Analyst', 
+            'Analyst',
+            'Senior Analyst',
+            'Specialist',
+            'Expert',
+            'Master'
+        ];
         
         // Create a pool of audio objects for rapid typing
-        this.typeSoundPool = Array.from({ length: 3 }, () => {
+        this.typeSoundPool = Array.from({ length: 5}, () => {
             const audio = new Audio('../assets/audio/Keyboard_Sound.mp3');
             audio.volume = 0.1;
             return audio;
         });
         this.currentSoundIndex = 0;
         
-        // DOM elements we'll need to interact with
+        // DOM elements
         this.elements = {
+            securityLevel: document.querySelector('.security-level'),
+            missionProgress: document.querySelector('.mission-progress'),
             scenarioText: document.querySelector('.scenario-content'),
             choicesContainer: document.querySelector('.choices-container'),
             feedbackArea: document.querySelector('.feedback-message'),
             chapterName: document.querySelector('.chapter-name'),
-            missionProgress: document.querySelector('.mission-progress')
         };
 
-        // Available chapters
-        this.chapters = {
-            chapter1
-            // We'll add more chapters here later
+        this.updateProgressDisplay();
+  
+        this.updateChapterDisplay();
+    }
+    
+    updateChapterDisplay() {
+        this.elements.chapterName.textContent = this.currentChapter.title;
+    }
+    
+    updateProgressDisplay() {
+        const chapterMap = {
+            'chapter1': 0,
+            'chapter2': 1
         };
+        
+        const securityLevelIndex = chapterMap[this.gameState.currentChapterId] || 0;
+        
+        this.elements.missionProgress.textContent = `Progress: ${this.currentSceneNumber}/${this.totalScenes}`;
+        this.elements.securityLevel.textContent = `Security Level: ${this.securityLevels[securityLevelIndex]}`
     }
 
     // Initialize the game
@@ -62,10 +99,13 @@ class StoryEngine {
     // Load a specific chapter
     loadChapter(chapterId) {
         this.currentChapter = this.chapters[chapterId];
-        this.elements.chapterName.textContent = this.currentChapter.title;
-        
-        // Start with the initial scenario
         this.currentScene = this.currentChapter.initialScenario;
+        this.currentSceneNumber = 1;
+        this.totalScenes = this.currentChapter.totalScenes;
+        this.gameState.currentChapterId = chapterId;
+    
+        this.updateChapterDisplay();
+        this.updateProgressDisplay();
         this.updateUI();
     }
 
@@ -74,21 +114,38 @@ class StoryEngine {
         const choice = this.currentScene.choices.find(c => c.id === choiceId);
         if (!choice) return;
 
-        // Update game state
-        if (choice.isSuboptimal) {
-            this.gameState.suboptimalChoices = true;
+        // Execute consequence
+        if (choice.consequence) {
+            choice.consequence(this.gameState);
+        }
+
+        // Special handling for chapter transition
+        if (this.gameState.chapterTransition) {
+            // Trigger loading screen
+            document.querySelector('.loading-screen').hidden = false;
+            
+            // Simulate loading delay
+            setTimeout(() => {
+                this.loadChapter('chapter2');
+                document.querySelector('.loading-screen').hidden = true;
+                // Reset transition flag
+                this.gameState.chapterTransition = false;
+            }, 1000);
+            return;
         }
 
         // Show feedback
         this.showFeedback(choice.feedback);
 
         // Move to next scene
-        if (choice.next === 'chapter_complete') {
-            this.completeChapter();
-        } else {
-            this.currentScene = this.currentChapter.scenes[choice.next];
-            this.updateUI();
+        if (choice.next === 'end') {
+            this.gameState.finalScore = this.gameState.chapterScore;
         }
+        this.currentSceneNumber++;
+        this.updateProgressDisplay();
+
+        this.currentScene = this.currentChapter.scenes[choice.next];
+        this.updateUI();
     }
 
     playTypeSound() {
@@ -104,14 +161,20 @@ class StoryEngine {
         this.elements.scenarioText.textContent = '';
         this.elements.choicesContainer.innerHTML = '';
 
-        const text = this.currentScene.text;
+        const text = typeof this.currentScene.text === 'function' 
+        ? this.currentScene.text(this.gameState) 
+        : this.currentScene.text;
         let index = 0;
 
         const typeCharacter = () => {
             if (index < text.length) {
-                this.elements.scenarioText.textContent += text[index];
+                if (text[index] === '\n') {
+                    this.elements.scenarioText.innerHTML += '<br>';
+                } else {
+                    this.elements.scenarioText.innerHTML += text[index];
+                }
                 // Only play sound for visible characters
-                if (text[index] !== ' ' && text[index] !== '\n') {
+                if (text[index] !== ' ' && text[index] !== '\n' && index % 5 === 0) {
                     this.playTypeSound();
                 }
                 index++;
@@ -143,60 +206,6 @@ class StoryEngine {
             
             this.elements.choicesContainer.appendChild(button);
         });
-
-        // Handle interactive components if present
-        if (this.currentScene.type === 'interactive') {
-            this.setupInteractiveComponent(this.currentScene.componentId);
-        }
-    }
-
-    // Set up interactive components (like the password policy builder)
-    setupInteractiveComponent(componentId) {
-        const component = this.currentChapter.components[componentId];
-        if (!component) return;
-
-        const containerDiv = document.createElement('div');
-        containerDiv.id = componentId;
-        containerDiv.className = 'interactive-component';
-
-        // Create form elements based on component options
-        component.options.forEach(option => {
-            const optionContainer = document.createElement('div');
-            optionContainer.className = 'option-container';
-
-            const label = document.createElement('label');
-            label.textContent = option.label;
-            optionContainer.appendChild(label);
-
-            if (option.type === 'select') {
-                const select = document.createElement('select');
-                select.id = option.id;
-                option.options.forEach(opt => {
-                    const optElement = document.createElement('option');
-                    optElement.value = opt.value;
-                    optElement.textContent = opt.label;
-                    select.appendChild(optElement);
-                });
-                optionContainer.appendChild(select);
-            } else if (option.type === 'checkboxes') {
-                option.options.forEach(opt => {
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = opt.id;
-                    const checkLabel = document.createElement('label');
-                    checkLabel.textContent = opt.label;
-                    optionContainer.appendChild(checkbox);
-                    optionContainer.appendChild(checkLabel);
-                });
-            }
-
-            containerDiv.appendChild(optionContainer);
-        });
-
-        // Add to the scene
-        const challengeArea = document.querySelector('.challenge-area');
-        challengeArea.innerHTML = '';
-        challengeArea.appendChild(containerDiv);
     }
 
     // Show feedback to the player
@@ -204,20 +213,19 @@ class StoryEngine {
         this.elements.feedbackArea.textContent = feedback;
         this.elements.feedbackArea.style.display = 'block';
 
-        // Clear feedback after 3 seconds
-        setTimeout(() => {
+        // Clear feedback after 10 seconds
+        const clearFeedbackTimer = setTimeout(() => {
             this.elements.feedbackArea.style.display = 'none';
-        }, 3000);
+        }, 10000);
+    
+        // Allow clearing feedback when next choice is made
+        this.clearFeedbackTimer = clearFeedbackTimer;
     }
 
     // Handle chapter completion
     completeChapter() {
-        const result = this.currentChapter.evaluatePerformance(this.gameState);
-        this.gameState.score += result.score;
-
-        this.showFeedback(`Chapter Complete! ${result.feedback}`);
-        // Here we would typically move to the next chapter
-        // We'll implement this later when we have more chapters
+        // Prepare to move to next chapter
+        this.loadChapter(result.nextChapter);
     }
 
     // Save game progress

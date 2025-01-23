@@ -1,183 +1,260 @@
-const chapter2 = {
-    title: "Growing Pains",
-    description: "Handle security challenges as TechStart rapidly expands",
+export const chapter2 = {
+    id: "growing-pains",
+    title: "Growing Pains: Password Problems",
+    maxScore: 100,
+    totalScenes: 7,
 
-    scenes: [
-        // Company Growth Introduction
-        {
-            id: "growth_intro",
-            type: "dialogue",
-            text: "Six months have passed. TechStart has grown from 50 to 200 employees! While this is exciting, your inbox is flooded with password reset requests.",
-            typing: true
+    achievements: {
+        security_educator: {
+            id: "security_educator",
+            title: "Security Educator",
+            description: "Implemented effective security training",
+            condition: (gameState) => gameState.chapter2_choices?.includes("balanced_response")
         },
-
-        // IT Ticket Analysis
-        {
-            id: "password_reset_analysis",
-            type: "interaction",
-            component: "ticket-analysis",
-            text: "Review the IT help desk tickets from the past week:",
-            data: {
-                tickets: [
-                    { id: "T-1023", type: "Password Reset", user: "john.m", department: "Sales", reason: "Forgot password" },
-                    { id: "T-1024", type: "Password Reset", user: "sarah.k", department: "Marketing", reason: "Password expired" },
-                    { id: "T-1025", type: "Password Reset", user: "mike.p", department: "Engineering", reason: "Account locked" },
-                    // More tickets...
-                ]
-            }
+        forward_thinker: {
+            id: "forward_thinker",
+            title: "Forward Thinker",
+            description: "Proposed advanced authentication solutions",
+            condition: (gameState) => gameState.chapter2_choices?.includes("ideal_solution")
         },
-
-        // Password Pattern Analysis
-        {
-            id: "pattern_analysis",
-            type: "interaction",
-            component: "password-patterns",
-            text: "Analyze common patterns in compromised passwords:",
-            data: {
-                patterns: [
-                    { pattern: "Company name + year", frequency: "35%" },
-                    { pattern: "Seasons + numbers", frequency: "28%" },
-                    { pattern: "Simple keyboard patterns", frequency: "22%" },
-                    { pattern: "Common words + special chars", frequency: "15%" }
-                ]
-            }
-        },
-
-        // Security Incident
-        {
-            id: "account_compromise",
-            type: "dialogue",
-            text: "ALERT: Marketing team lead Lisa's account shows suspicious login activity from an unknown location. Investigation reveals she used the same password as her compromised social media account."
-        },
-
-        // Incident Response Choice
-        {
-            id: "handle_compromise",
-            type: "choice",
-            text: "How do you respond to this security incident?",
-            choices: [
-                {
-                    text: "Force immediate password reset for all employees and implement stricter password rules",
-                    consequence: "strict_response",
-                    impact: { security: +2, satisfaction: -2 }
-                },
-                {
-                    text: "Reset Lisa's password, then organize a company-wide security awareness training",
-                    consequence: "balanced_response",
-                    impact: { security: +1, satisfaction: +1 },
-                    achievement: "security_educator"
-                },
-                {
-                    text: "Only reset Lisa's password and send her an email about password safety",
-                    consequence: "minimal_response",
-                    impact: { security: -1, satisfaction: +1 }
-                }
-            ]
-        },
-
-        // Consequence Scenes
-        {
-            id: "strict_response",
-            type: "dialogue",
-            text: "The forced password reset causes frustration among employees. Many resort to writing passwords on sticky notes.",
-            condition: "consequence === 'strict_response'"
-        },
-
-        {
-            id: "balanced_response",
-            type: "dialogue",
-            text: "The security training is well-received. Employees begin to understand the importance of unique passwords.",
-            condition: "consequence === 'balanced_response'"
-        },
-
-        {
-            id: "minimal_response",
-            type: "dialogue",
-            text: "A week later, three more accounts are compromised using passwords from the same data breach.",
-            condition: "consequence === 'minimal_response'"
-        },
-
-        // Problem Analysis
-        {
-            id: "password_problems",
-            type: "interaction",
-            component: "problem-analysis",
-            text: "Review the key issues with password-only authentication:",
-            data: {
-                problems: [
-                    "Password reuse across multiple accounts",
-                    "Complex passwords leading to sticky notes",
-                    "High volume of reset requests",
-                    "Password sharing between team members",
-                    "Difficulty tracking compromised credentials"
-                ]
-            }
-        },
-
-        // Solution Research
-        {
-            id: "research_solutions",
-            type: "choice",
-            text: "What solution do you propose to management?",
-            choices: [
-                {
-                    text: "Implement a password manager for all employees",
-                    consequence: "partial_solution",
-                    feedback: "Good start, but doesn't solve all security issues"
-                },
-                {
-                    text: "Research Multi-Factor Authentication solutions",
-                    consequence: "ideal_solution",
-                    achievement: "forward_thinker",
-                    feedback: "Excellent choice! This will significantly improve security"
-                },
-                {
-                    text: "Create more password complexity rules",
-                    consequence: "poor_solution",
-                    feedback: "This might make the problem worse"
-                }
-            ]
-        },
-
-        // Chapter Conclusion
-        {
-            id: "chapter_conclusion",
-            type: "dialogue",
-            text: "As you document the growing pains of password-only security, you realize that a more robust authentication system is needed. Perhaps it's time to look into multi-factor authentication...",
-            typing: true
+        security_expert: {
+            id: "security_expert",
+            title: "Road to Security Expert",
+            description: "Achieved perfect score in password policy implementation",
+            condition: (gameState) => gameState.chapterScore == 100
         }
-    ],
+    },
+    
+    initialScenario: {
+        text: `Six months have passed. TechStart has grown from 50 to 200 employees! While this is exciting, your inbox is flooded with password reset requests.
 
-    // Chapter-specific functions
-    onComplete: function() {
-        unlockAchievement('ch2_complete', 'Growth Manager');
-        // Store important decisions for future chapters
-        gameState.decisions.passwordCrisis = {
-            handledCompromise: this.getLastChoice('handle_compromise'),
-            proposedSolution: this.getLastChoice('research_solutions')
-        };
+What's your first step?`,
+        
+        choices: [
+            {
+                id: "analyze_tickets",
+                text: "Review IT help desk password reset tickets",
+                feedback: "Smart approach to understanding the root problem.",
+                consequence: (gameState) => {
+                    gameState.chapter2_choices = gameState.chapter2_choices || [];
+                    gameState.chapter2_choices.push("analyze_tickets");
+                    gameState.chapterScore = (gameState.chapterScore || 0) + 15;
+                },
+                next: "password_reset_analysis"
+            },
+            {
+                id: "immediate_action",
+                text: "Implement immediate password policy changes",
+                feedback: "Quick action might miss underlying issues.",
+                consequence: (gameState) => {
+                    gameState.chapter2_choices.push("immediate_action");
+                    gameState.chapterScore = (gameState.chapterScore || 0) + 5;
+                    gameState.userResistance = true;
+                },
+                next: "password_reset_analysis",
+                isSuboptimal: true
+            }
+        ]
     },
 
-    // Achievement definitions
-    achievements: {
-        'security_educator': {
-            id: 'ch2_educator',
-            title: 'Security Educator',
-            description: 'Successfully balanced security needs with user education'
+    scenes: {
+        password_reset_analysis: {
+            text: "Review the IT help desk tickets from the past week. What patterns do you notice?",
+            choices: [
+                {
+                    id: "pattern_investigation",
+                    text: "Investigate password reset patterns",
+                    feedback: "Good approach to understanding systemic issues.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("pattern_investigation");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "pattern_analysis"
+                },
+                {
+                    id: "ignore_patterns",
+                    text: "Dismiss ticket analysis as trivial",
+                    feedback: "Overlooking these details can lead to bigger problems.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("ignore_patterns");
+                        gameState.chapterScore += 5;
+                        gameState.userResistance = true;
+                    },
+                    next: "pattern_analysis",
+                    isSuboptimal: true
+                }
+            ]
         },
-        'forward_thinker': {
-            id: 'ch2_forward_thinker',
-            title: 'Forward Thinker',
-            description: 'Recognized the need for advanced authentication methods'
+
+        pattern_analysis: {
+            text: "Analysis reveals common password patterns. How will you address these risks?",
+            choices: [
+                {
+                    id: "comprehensive_training",
+                    text: "Develop comprehensive security awareness training",
+                    feedback: "Education is key to improving security culture.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("comprehensive_training");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "account_compromise"
+                },
+                {
+                    id: "technical_solution",
+                    text: "Focus on technical password restrictions",
+                    feedback: "Technical solutions alone may not solve behavioral issues.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("technical_solution");
+                        gameState.chapterScore += 5;
+                        gameState.userResistance = true;
+                    },
+                    next: "account_compromise",
+                    isSuboptimal: true
+                }
+            ]
+        },
+
+        account_compromise: {
+            text: "ALERT: Marketing team lead Lisa's account shows suspicious login activity from an unknown location. Investigation reveals password reuse from a compromised social media account.",
+            choices: [
+                {
+                    id: "balanced_response",
+                    text: "Reset Lisa's password and organize company-wide security training",
+                    feedback: "Balanced approach addressing both immediate and long-term security.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("balanced_response");
+                        gameState.chapterScore += 15;
+                    },
+                    next: "research_solutions"
+                },
+                {
+                    id: "strict_response",
+                    text: "Force immediate password reset for all employees",
+                    feedback: "Strict approach may create user frustration.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("strict_response");
+                        gameState.chapterScore += 10;
+                        gameState.userResistance = true;
+                    },
+                    next: "research_solutions",
+                    isSuboptimal: true
+                }
+            ]
+        },
+
+        password_problems: {
+            text: "Review the key issues with password-only authentication. What's the most critical problem?",
+            choices: [
+                {
+                    id: "root_cause_analysis",
+                    text: "Conduct in-depth root cause analysis of authentication vulnerabilities",
+                    feedback: "Thorough investigation reveals systemic security weaknesses.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("root_cause_analysis");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "research_solutions"
+                },
+                {
+                    id: "surface_fix",
+                    text: "Apply quick surface-level fixes to authentication process",
+                    feedback: "Superficial solutions rarely address fundamental security issues.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("surface_fix");
+                        gameState.chapterScore += 5;
+                        gameState.userResistance = true;
+                    },
+                    next: "research_solutions",
+                    isSuboptimal: true
+                }
+            ]
+        },
+        
+        employee_feedback: {
+            text: "Employees have mixed feelings about recent security changes. How will you address their concerns?",
+            choices: [
+                {
+                    id: "open_dialogue",
+                    text: "Hold town hall meeting to explain security rationale",
+                    feedback: "Transparent communication builds trust and understanding.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("open_dialogue");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "research_solutions"
+                },
+                {
+                    id: "ignore_feedback",
+                    text: "Dismiss employee concerns and maintain strict policy",
+                    feedback: "Ignoring user perspectives can lead to resistance and security circumvention.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("ignore_feedback");
+                        gameState.chapterScore += 0;
+                        gameState.userResistance = true;
+                    },
+                    next: "research_solutions",
+                    isSuboptimal: true
+                }
+            ]
+        },
+
+        research_solutions: {
+            text: "What solution do you propose to management to address authentication challenges?",
+            choices: [
+                {
+                    id: "ideal_solution",
+                    text: "Research Multi-Factor Authentication solutions",
+                    feedback: "Excellent choice! This will significantly improve security.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("ideal_solution");
+                        gameState.chapterScore += 30;
+                    },
+                    next: "chapter_end"
+                },
+                {
+                    id: "partial_solution",
+                    text: "Implement a password manager for all employees",
+                    feedback: "Good start, but doesn't solve all security issues.",
+                    consequence: (gameState) => {
+                        gameState.chapter2_choices.push("partial_solution");
+                        gameState.chapterScore += 20;
+                    },
+                    next: "chapter_end",
+                    isSuboptimal: true
+                }
+            ]
+        },
+
+        chapter_end: {
+            text: (gameState) => {
+                const score = gameState.chapterScore || 0;
+                const unlockedAchievements = Object.values(chapter2.achievements)
+                    .filter(achievement => achievement.condition(gameState))
+                    .map(a => `🏆 ${a.title}: ${a.description}`);
+
+                const achievementsText = unlockedAchievements.length > 0 
+                ? `\n\nAchievements Unlocked:\n${unlockedAchievements.join('\n')}` 
+                : '\n\nNo achievements unlocked this chapter.';
+                
+                return `You've navigated TechStart through complex authentication challenges.
+        
+        Final Score: ${score}/100
+        
+        ${score >= 90 ? "Outstanding! You've demonstrated strategic approach to security management." : 
+          score >= 70 ? "Well done! You've made significant improvements to authentication security." : 
+          "Completed! More focus needed on comprehensive security strategies."}
+        
+        Your decisions continue to shape TechStart's security landscape...${achievementsText}`;
+            },
+            choices: [
+                {
+                    id: "next-chapter",
+                    text: "Continue to Chapter 3",
+                    feedback: "Chapter 2 complete!",
+                    consequence: (gameState) => {},
+                    next: "end"
+                }
+            ]
         }
     }
 };
-
-// Initialize chapter
-function initChapter2() {
-    // Any specific initialization needed for chapter 2
-    return chapter2;
-}
-
-// Export the chapter
-export default initChapter2();
