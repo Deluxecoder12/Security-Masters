@@ -125,7 +125,7 @@ What's your first step?`,
                         gameState.chapter2_choices.push("balanced_response");
                         gameState.chapterScore += 15;
                     },
-                    next: "research_solutions"
+                    next: "password_problems"
                 },
                 {
                     id: "strict_response",
@@ -136,7 +136,7 @@ What's your first step?`,
                         gameState.chapterScore += 10;
                         gameState.userResistance = true;
                     },
-                    next: "research_solutions",
+                    next: "password_problems",
                     isSuboptimal: true
                 }
             ]
@@ -153,7 +153,7 @@ What's your first step?`,
                         gameState.chapter2_choices.push("root_cause_analysis");
                         gameState.chapterScore += 10;
                     },
-                    next: "research_solutions"
+                    next: "employee_feedback"
                 },
                 {
                     id: "surface_fix",
@@ -164,7 +164,7 @@ What's your first step?`,
                         gameState.chapterScore += 5;
                         gameState.userResistance = true;
                     },
-                    next: "research_solutions",
+                    next: "employee_feedback",
                     isSuboptimal: true
                 }
             ]
@@ -175,7 +175,7 @@ What's your first step?`,
             choices: [
                 {
                     id: "open_dialogue",
-                    text: "Hold town hall meeting to explain security rationale",
+                    text: "Hold meeting to explain security rationale",
                     feedback: "Transparent communication builds trust and understanding.",
                     consequence: (gameState) => {
                         gameState.chapter2_choices.push("open_dialogue");
@@ -228,6 +228,9 @@ What's your first step?`,
         chapter_end: {
             text: (gameState) => {
                 const score = gameState.chapterScore || 0;
+                const totalScore = gameState.totalScore + score;
+                gameState.totalScore = totalScore;
+
                 const unlockedAchievements = Object.values(chapter2.achievements)
                     .filter(achievement => achievement.condition(gameState))
                     .map(a => `🏆 ${a.title}: ${a.description}`);
@@ -238,7 +241,8 @@ What's your first step?`,
                 
                 return `You've navigated TechStart through complex authentication challenges.
         
-        Final Score: ${score}/100
+        Chapter Score: ${score}/100
+        Total Score: ${totalScore}
         
         ${score >= 90 ? "Outstanding! You've demonstrated strategic approach to security management." : 
           score >= 70 ? "Well done! You've made significant improvements to authentication security." : 
@@ -251,7 +255,12 @@ What's your first step?`,
                     id: "next-chapter",
                     text: "Continue to Chapter 3",
                     feedback: "Chapter 2 complete!",
-                    consequence: (gameState) => {},
+                    consequence: (gameState) => {
+                        // Reset state for next chapter
+                        gameState.chapterScore = 0;
+                        // Signal chapter transition
+                        gameState.chapterTransition = true;
+                    },
                     next: "end"
                 }
             ]

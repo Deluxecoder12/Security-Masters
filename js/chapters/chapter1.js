@@ -215,6 +215,9 @@ How would you handle this situation?`,
         chapter_end: {
             text: (gameState) => {
                 const score = gameState.chapterScore || 0;
+                const totalScore = gameState.totalScore + score;
+                gameState.totalScore = totalScore;
+                
                 const unlockedAchievements = Object.values(chapter1.achievements)
                     .filter(achievement => achievement.condition(gameState))
                     .map(a => `🏆 ${a.title}: ${a.description}`);
@@ -225,7 +228,8 @@ How would you handle this situation?`,
                 
                 return `You've completed your first challenge as TechStart's IT Security Administrator.
         
-        Final Score: ${score}/100
+        Chapter Score: ${score}/100
+        Total Score: ${totalScore}
         
         ${score >= 90 ? "Outstanding! You've demonstrated excellent judgment in balancing security with usability." : 
           score >= 70 ? "Well done! You've successfully implemented basic security measures while maintaining operations." : 
@@ -241,7 +245,6 @@ How would you handle this situation?`,
                     consequence: (gameState) => {
                         // Reset state for next chapter
                         gameState.chapterScore = 0;
-                        gameState.chapter1_choices = [];
                         // Signal chapter transition
                         gameState.chapterTransition = true;
                     },
