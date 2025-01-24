@@ -186,7 +186,13 @@ class StoryEngine {
     showChoices() {
         if (!this.currentScene.choices) return;
         
-        this.currentScene.choices.forEach((choice, index) => {
+        const choices = [...this.currentScene.choices];
+        // For two options, simple random boolean for swap
+        if (Math.random() < 0.5) {
+            [choices[0], choices[1]] = [choices[1], choices[0]];
+        }
+        
+        choices.forEach((choice, index) => {
             const button = document.createElement('button');
             button.className = 'choice-btn';
             button.dataset.choiceId = choice.id;
