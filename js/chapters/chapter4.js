@@ -1,246 +1,214 @@
-const chapter4 = {
+export const chapter4 = {
+    id: "too-many-apps",
     title: "Too Many Apps!",
-    description: "Tackle the challenge of multiple cloud services and authentication prompts",
+    maxScore: 100,
+    totalScenes: 6,
 
-    scenes: [
-        // Chapter Introduction
-        {
-            id: "sso_intro",
-            type: "dialogue",
-            text: "TechStart is now using dozens of cloud services. Employees are frustrated with logging into multiple apps and getting MFA prompts throughout the day. The VP of Engineering just messaged you: 'We need to simplify this authentication mess!'",
-            typing: true
+    achievements: {
+        user_advocate: {
+            id: "user_advocate",
+            title: "User Advocate",
+            description: "Successfully addressed MFA fatigue",
+            condition: (gameState) => gameState.chapter4_choices?.includes("analyze_patterns")
         },
-
-        // Current State Analysis
-        {
-            id: "app_inventory",
-            type: "interaction",
-            component: "app-mapper",
-            text: "Map out current application usage across departments:",
-            data: {
-                departments: [
-                    {
-                        name: "Engineering",
-                        apps: ["GitHub", "Jira", "AWS Console", "Slack", "Zoom"]
-                    },
-                    {
-                        name: "Sales",
-                        apps: ["Salesforce", "Zoom", "Slack", "Office 365", "DocuSign"]
-                    },
-                    {
-                        name: "Marketing",
-                        apps: ["HubSpot", "Canva", "Slack", "Google Workspace", "Zoom"]
-                    },
-                    {
-                        name: "HR",
-                        apps: ["Workday", "DocuSign", "Slack", "Office 365", "Zoom"]
-                    }
-                ]
-            }
+        sso_strategist: {
+            id: "sso_strategist",
+            title: "SSO Strategist",
+            description: "Developed comprehensive SSO strategy",
+            condition: (gameState) => gameState.chapter4_choices?.includes("comprehensive_sso")
         },
-
-        // Pain Point Analysis
-        {
-            id: "authentication_pain_points",
-            type: "interaction",
-            component: "pain-point-analyzer",
-            text: "Review authentication pain points reported by employees:",
-            data: {
-                painPoints: [
-                    {
-                        issue: "Multiple login prompts",
-                        impact: "15 minutes lost per employee daily",
-                        frequency: "Very High"
-                    },
-                    {
-                        issue: "Repeated MFA challenges",
-                        impact: "Frustration and workflow disruption",
-                        frequency: "High"
-                    },
-                    {
-                        issue: "Password reset across apps",
-                        impact: "Increased IT support tickets",
-                        frequency: "Medium"
-                    },
-                    {
-                        issue: "Different password policies",
-                        impact: "Password fatigue and reuse",
-                        frequency: "High"
-                    }
-                ]
-            }
-        },
-
-        // SSO Introduction
-        {
-            id: "sso_learning",
-            type: "interaction",
-            component: "sso-explainer",
-            text: "Research SSO solutions:",
-            data: {
-                features: [
-                    "Single set of credentials for multiple applications",
-                    "Centralized authentication management",
-                    "Reduced password fatigue",
-                    "Improved security monitoring"
-                ],
-                benefits: [
-                    "Improved user experience",
-                    "Reduced IT support costs",
-                    "Enhanced security control",
-                    "Better compliance management"
-                ]
-            }
-        },
-
-        // SSO Provider Selection
-        {
-            id: "choose_provider",
-            type: "choice",
-            text: "Which SSO solution approach will you recommend?",
-            choices: [
-                {
-                    text: "Build an internal SSO solution using open-source tools",
-                    consequence: "internal_sso",
-                    impact: { cost: -1, control: +2, complexity: +2 }
-                },
-                {
-                    text: "Purchase an enterprise SSO solution from a major vendor",
-                    consequence: "enterprise_sso",
-                    impact: { cost: +2, control: +1, complexity: -1 },
-                    achievement: "strategic_planner"
-                },
-                {
-                    text: "Use basic SSO features from existing cloud providers",
-                    consequence: "basic_sso",
-                    impact: { cost: 0, control: 0, complexity: +1 }
-                }
-            ]
-        },
-
-        // App Integration Planning
-        {
-            id: "integration_planning",
-            type: "interaction",
-            component: "sso-mapper",
-            text: "Plan the SSO integration for different applications:",
-            data: {
-                categories: [
-                    {
-                        type: "SAML-ready",
-                        apps: ["Salesforce", "AWS", "Workday"],
-                        integration: "Direct"
-                    },
-                    {
-                        type: "OAuth/OIDC",
-                        apps: ["GitHub", "Google Workspace"],
-                        integration: "Standard"
-                    },
-                    {
-                        type: "Legacy",
-                        apps: ["Custom Internal Tools"],
-                        integration: "Custom Development"
-                    }
-                ]
-            }
-        },
-
-        // Integration Mini-game
-        {
-            id: "sso_puzzle",
-            type: "interaction",
-            component: "sso-puzzle",
-            text: "Connect applications to the appropriate SSO integration methods:",
-            data: {
-                apps: ["Salesforce", "GitHub", "Internal HR", "Slack"],
-                methods: ["SAML", "OAuth", "Custom", "OIDC"],
-                connections: [
-                    { app: "Salesforce", method: "SAML" },
-                    { app: "GitHub", method: "OAuth" },
-                    { app: "Internal HR", method: "Custom" },
-                    { app: "Slack", method: "OIDC" }
-                ]
-            }
-        },
-
-        // Implementation Planning
-        {
-            id: "rollout_planning",
-            type: "choice",
-            text: "How will you approach the SSO rollout?",
-            choices: [
-                {
-                    text: "Gradual rollout starting with one department",
-                    consequence: "gradual_rollout",
-                    impact: { risk: -1, adoption: +1 },
-                    achievement: "careful_planner"
-                },
-                {
-                    text: "Complete organization-wide implementation",
-                    consequence: "full_rollout",
-                    impact: { risk: +2, adoption: -1 }
-                },
-                {
-                    text: "Optional opt-in program for departments",
-                    consequence: "optional_rollout",
-                    impact: { risk: -1, adoption: -2 }
-                }
-            ]
-        },
-
-        // User Experience Demo
-        {
-            id: "sso_demo",
-            type: "interaction",
-            component: "sso-flow-demo",
-            text: "Preview the new SSO login experience:",
-            steps: [
-                "Single login page for all applications",
-                "One-time MFA verification",
-                "Automatic access to connected apps",
-                "Session management"
-            ]
-        },
-
-        // Chapter Conclusion
-        {
-            id: "chapter_conclusion",
-            type: "dialogue",
-            text: "The SSO solution looks promising, but implementing it across all applications won't be simple. Some applications don't support standard protocols, and departments have different needs. Time to tackle the integration challenges...",
-            typing: true
+        efficiency_expert: {
+            id: "efficiency_expert",
+            title: "Efficiency Expert",
+            description: "Achieved perfect score in SSO planning",
+            condition: (gameState) => gameState.chapterScore == 100
         }
-    ],
-
-    // Chapter-specific functions
-    onComplete: function() {
-        unlockAchievement('ch4_complete', 'SSO Architect');
-        // Store important decisions for future chapters
-        gameState.decisions.ssoImplementation = {
-            provider: this.getLastChoice('choose_provider'),
-            rolloutStrategy: this.getLastChoice('rollout_planning'),
-            appIntegrations: this.getLastChoice('integration_planning')
-        };
     },
 
-    // Achievement definitions
-    achievements: {
-        'strategic_planner': {
-            id: 'ch4_strategist',
-            title: 'Strategic Planner',
-            description: 'Chose an optimal SSO solution for enterprise needs'
+    initialScenario: {
+        text: `From: Support@techstart.com
+Subject: Login Issues Escalating
+
+Help desk is overwhelmed:
+- 200+ tickets about multiple login prompts
+- Employees managing 8+ sets of credentials
+- Increased MFA fatigue reported
+- Shadow IT emerging as employees seek shortcuts
+
+How do you address this growing crisis?`,
+        choices: [
+            {
+                id: "analyze_patterns",
+                text: "Analyze app usage patterns and authentication pain points",
+                feedback: "Excellent! Understanding user behavior helps find effective solutions.",
+                consequence: (gameState) => {
+                    gameState.chapter4_choices = gameState.chapter4_choices || [];
+                    gameState.chapter4_choices.push("analyze_patterns");
+                    gameState.chapterScore = (gameState.chapterScore || 0) + 20;
+                },
+                next: "solution_proposal"
+            },
+            {
+                id: "quick_fix",
+                text: "Implement password manager company-wide",
+                feedback: "Password managers don't address MFA fatigue.",
+                consequence: (gameState) => {
+                    gameState.chapter4_choices = gameState.chapter4_choices || [];
+                    gameState.chapter4_choices.push("quick_fix");
+                    gameState.chapterScore = (gameState.chapterScore || 0) + 5;
+                },
+                next: "solution_proposal",
+                isSuboptimal: true
+            }
+        ]
+    },
+
+    scenes: {
+        solution_proposal: {
+            text: "Analysis complete. What solution do you propose to management?",
+            choices: [
+                {
+                    id: "comprehensive_sso",
+                    text: "Single Sign-On (SSO) with integrated MFA",
+                    feedback: "Perfect! SSO addresses both security and usability.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("comprehensive_sso");
+                        gameState.chapterScore += 20;
+                    },
+                    next: "vendor_selection"
+                },
+                {
+                    id: "reduce_mfa",
+                    text: "Reduce MFA frequency for commonly used apps",
+                    feedback: "Reducing security measures isn't the best solution.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("reduce_mfa");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "vendor_selection",
+                    isSuboptimal: true
+                }
+            ]
         },
-        'careful_planner': {
-            id: 'ch4_careful',
-            title: 'Careful Planner',
-            description: 'Implemented SSO with minimal disruption'
+
+        vendor_selection: {
+            text: "How do you approach SSO vendor selection?",
+            choices: [
+                {
+                    id: "thorough_evaluation",
+                    text: "Evaluate vendors based on app compatibility and security features",
+                    feedback: "Good approach! Compatibility is crucial for SSO success.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("thorough_evaluation");
+                        gameState.chapterScore += 20;
+                    },
+                    next: "implementation_strategy"
+                },
+                {
+                    id: "quick_selection",
+                    text: "Choose the most popular vendor to save time",
+                    feedback: "Popular solutions might not best fit your needs.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("quick_selection");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "implementation_strategy",
+                    isSuboptimal: true
+                }
+            ]
+        },
+
+        implementation_strategy: {
+            text: "How will you handle the SSO implementation?",
+            choices: [
+                {
+                    id: "phased_rollout",
+                    text: "Implement phased rollout starting with pilot group",
+                    feedback: "Smart! Phased approach allows for adjustments.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("phased_rollout");
+                        gameState.chapterScore += 20;
+                    },
+                    next: "evaluate_success"
+                },
+                {
+                    id: "full_rollout",
+                    text: "Roll out to all departments simultaneously",
+                    feedback: "Full rollout increases risk of widespread issues.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("full_rollout");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "evaluate_success",
+                    isSuboptimal: true
+                }
+            ]
+        },
+
+        evaluate_success: {
+            text: "Initial SSO implementation complete. How do you measure success?",
+            choices: [
+                {
+                    id: "comprehensive_metrics",
+                    text: "Track login issues, help desk tickets, and user satisfaction",
+                    feedback: "Excellent! Multiple metrics provide complete picture.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("comprehensive_metrics");
+                        gameState.chapterScore += 20;
+                    },
+                    next: "chapter_end"
+                },
+                {
+                    id: "basic_tracking",
+                    text: "Monitor help desk tickets only",
+                    feedback: "Help desk tickets alone don't show full impact.",
+                    consequence: (gameState) => {
+                        gameState.chapter4_choices.push("basic_tracking");
+                        gameState.chapterScore += 10;
+                    },
+                    next: "chapter_end",
+                    isSuboptimal: true
+                }
+            ]
+        },
+
+        chapter_end: {
+            text: (gameState) => {
+                const score = gameState.chapterScore || 0;
+                const totalScore = gameState.totalScore + score;
+                gameState.totalScore = totalScore;
+
+                const unlockedAchievements = Object.values(chapter4.achievements)
+                    .filter(achievement => achievement.condition(gameState))
+                    .map(a => `🏆 ${a.title}: ${a.description}`);
+
+                const achievementsText = unlockedAchievements.length > 0 
+                    ? `\n\nAchievements Unlocked:\n${unlockedAchievements.join('\n')}` 
+                    : '\n\nNo achievements unlocked this chapter.';
+                
+                return `SSO journey begins! Login experience transformed.
+        
+        Chapter Score: ${score}/100
+        Total Score: ${totalScore}
+        
+        ${score >= 90 ? "Outstanding! You've masterfully balanced security and usability." : 
+          score >= 70 ? "Well done! SSO implementation is on track with minor concerns." : 
+          "Completed! Consider focusing more on user experience and thorough planning."}
+        
+        Integration challenges await...${achievementsText}`;
+            },
+            choices: [
+                {
+                    id: "next-chapter",
+                    text: "Continue to Chapter 5",
+                    feedback: "Time to tackle integration challenges!",
+                    consequence: (gameState) => {
+                        gameState.chapterScore = 0;
+                        gameState.chapterTransition = true;
+                    },
+                    next: "end"
+                }
+            ]
         }
     }
 };
-
-// Initialize chapter
-function initChapter4() {
-    return chapter4;
-}
-
-// Export the chapter
-export default initChapter4();

@@ -2,7 +2,7 @@ export const chapter2 = {
     id: "growing-pains",
     title: "Growing Pains: Password Problems",
     maxScore: 100,
-    totalScenes: 7,
+    totalScenes: 8,
 
     achievements: {
         security_educator: {
