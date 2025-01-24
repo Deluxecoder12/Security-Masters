@@ -187,8 +187,8 @@ class StoryEngine {
         if (!this.currentScene.choices) return;
         
         const choices = [...this.currentScene.choices];
-        // For two options, simple random boolean for swap
-        if (Math.random() < 0.5) {
+        // Random boolean for swap
+        if (choices.length > 1 && Math.random() < 0.5) {
             [choices[0], choices[1]] = [choices[1], choices[0]];
         }
         
