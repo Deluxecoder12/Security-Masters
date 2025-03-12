@@ -2,7 +2,7 @@ export const chapter6 = {
     id: "future-calls",
     title: "The Future Calls",
     maxScore: 100,
-    totalScenes: 8,
+    totalScenes: 7,
 
     achievements: {
         innovation_leader: {
@@ -16,6 +16,12 @@ export const chapter6 = {
             title: "Change Master",
             description: "Effectively managed authentication transition",
             condition: (gameState) => gameState.chapter6_choices?.includes("structured_transition")
+        },
+        efficiency_expert: {
+            id: "efficiency_expert",
+            title: "Efficiency Expert",
+            description: "Achieved perfect score in SSO planning",
+            condition: (gameState) => gameState.chapterScore == 100
         }
     },
 

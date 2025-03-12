@@ -2,7 +2,7 @@ export const chapter5 = {
     id: "integration-challenge",
     title: "The Integration Challenge",
     maxScore: 100,
-    totalScenes: 8,
+    totalScenes: 7,
 
     achievements: {
         sso_architect: {
@@ -16,6 +16,12 @@ export const chapter5 = {
             title: "Crisis Manager",
             description: "Effectively handled SSO outage",
             condition: (gameState) => gameState.chapter5_choices?.includes("structured_response")
+        },
+        efficiency_expert: {
+            id: "efficiency_expert",
+            title: "Efficiency Expert",
+            description: "Achieved perfect score in SSO planning",
+            condition: (gameState) => gameState.chapterScore == 100
         }
     },
 
